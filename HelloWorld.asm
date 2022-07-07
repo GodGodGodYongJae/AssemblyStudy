@@ -5,43 +5,64 @@ global CMAIN
 CMAIN:
     mov rbp, rsp; for correct debugging
     
-    ; 쉬프트(shift)연산, 논리(logical) 연산
-    ; 음수가 아닌 이상 곱하기 1 옮길때마다 x2 해주는 값이 나옴 
-    mov eax, 0x12345678
-    PRINT_HEX 4, eax
-    NEWLINE
-    shl eax, 8
-    PRINT_HEX 4, eax
-    NEWLINE
-    shr eax, 8
-   PRINT_HEX 4, eax
-    NEWLINE
-      ; 곱셈/ 나눗셈 빠르게 
-      ; 게임서버에서 ObjectID를 만들어줄 때   
-      
-      ; 논리연산 not and or xor
-      
-      ; 조건 A : 잘생겼다
-      ; 조건 B : 키가 크다
-      
-      ; not A : 잘생겼다의 반대 -> (0이면 1, 1이면 0)
-      ; A and B : 조건 A 와 조건B => 둘다1이면 1, 아니면 0
-      ; A xor B : 둘다 1이거나 둘다 0이면 0, 서로 다르면  1
-      mov al, 0b10010101
-      mov bl, 0b01111100
-      
-      ;0001 0100 0x14
-      and al,bl ; al = al and bl
-      PRINT_HEX 1, al
-      NEWLINE
-      
-      ;14     12 eb
-      ;0b1110 1011 = 0xeb
-      not al
-      PRINT_HEX 1, al
-      NEWLINE
-      
-      
+    ; 분기문 (if)
+    ; 특정 조건에 따라서 코드 흐름을 제어하는 것
+    ; ex) Button을 눌렀는가? YES -> 동작
+    ; ex ) 제한 시간 내에 던전 입장 수락 버튼을 눌렀는가? YES -> 입장,  NO -> 던전 취소
+    
+    ;조건 -> 흐름 
+    ; CMP dst, src (dst가 기준)
+    ; 비교를 한 결과물은 Flag Register 저장 
+    
+    ; JMP(JUMP) [label] 시리즈 
+    ; JMP  : 무조건 Jump
+    ; JE : JumpEquals 같으면 jump
+    ; JNE : JUmpNotEquals 다르면 jump
+    ; JG : JumpGreater jump 
+    ; JGE : JumpGreaterEquals 크거나 같으면 jump
+    ; JL .. JLE ... 
+    
+    ; 두 숫자가 같으면 1, 아니면 0을 출력하는 프로그램 
+    mov rax, 20
+    mov rbx, 10
+    
+    cmp rax, rbx
+    
+    je LABEL_EQUAL
+    
+    ; je를 못했으면, 같지 않다는 의미.
+    ; mov rcx, 0
+    xor rcx, rcx
+    jmp LABEL_EQUAL_END
+    
+LABEL_EQUAL:
+    mov rcx, 1
+    
+LABEL_EQUAL_END:
+
+     PRINT_HEX 1, rcx
+     NEWLINE 
+     
+     ;연습 문제 : 어떤 숫자 (1~100)가 짝수면1, 홀수면 0 출력하는 프로그램 
+     mov ax, 100
+     mov bl, 2 
+     div bl
+    
+    cmp ah,0
+    
+    JNE LABEL2_EQUAL
+    
+    mov rcx,1
+    jmp LABEL2_NOT_EQUAL
+     ; 나누기 연산 
+     ; div reg
+     ; - div bl => ax / bl (al몫 ah 나머지)
+LABEL2_EQUAL:
+    XOR rcx,rcx
+LABEL2_NOT_EQUAL:
+    PRINT_HEX 1, rcx         
+                   
+                     
     xor rax, rax
     ret
 
