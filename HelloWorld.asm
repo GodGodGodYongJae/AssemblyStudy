@@ -5,34 +5,42 @@ global CMAIN
 CMAIN:
    mov rbp, rsp; for correct debugging
     
-    ;함수 (프로시저 procedure 서브루틴 subroutine)
+    ;스택 메모리 스택 프레임
     
-  ;call PRINT_MSG
-   mov eax,10
-   mov ebx,5
-   call MAX
-   PRINT_DEC 4, ecx
-    
+    ; 레지스터는 다양한 용도로 사용
+    ; - a , b, c , d 범용 레지스터
+    ; - 포인터 레지스터 ( 포인터 = 위치를 가르키는..[주소값])
+    ; -- ip (instruction Pointer) : 다음 수행 명령어의 위치 
+    ; -- sp (Stack Pointer) : 현재 스택 Top 위치 ( 일종의 cursor)
+    ; -- bp (Base Pointer) : 스택 상대주소 계산용 
+    push rax
+    push rbx
+    push 2
+    push 7
+    call MAX
+    PRINT_DEC 8, rax
+    NEWLINE
+    ; pop pop 을 해주거나 8byte 만큼 내려가기 때문에 16을 해주거나
+    add rsp, 16
+    pop rbx
+    pop rax
     xor rax, rax
     ret
-PRINT_MSG:
-PRINT_STRING msg
-NEWLINE
-ret
+
 MAX:
-   cmp eax,ebx
-   jg L1
-    mov ecx,ebx
-    jmp L2
+    push rbp 
+    mov rbp, rsp 
+    mov rax,[rbp+16]
+    mov rbx, [rbp+24]
+    cmp rax,rbx
+    jg L1
+    mov rax, rbx
     L1:
-    mov ecx,eax
-    L2:
+    pop rbp
     ret
-;ex ) 두 값 중 더 큰 값을 반환하는 max
-; 근데 2 값을 어떻게 넘겨받지? 반환 어떻게?
-; eax와 ebx 입력값을 ecx에 반환.
 section .data
  msg db 'Hello World', 0x0
+ 
 section .bss
     num resb 1
     
