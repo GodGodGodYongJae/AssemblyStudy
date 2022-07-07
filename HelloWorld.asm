@@ -5,69 +5,76 @@ global CMAIN
 CMAIN:
     mov rbp, rsp; for correct debugging
     
-    ; 분기문 (if)
-    ; 특정 조건에 따라서 코드 흐름을 제어하는 것
-    ; ex) Button을 눌렀는가? YES -> 동작
-    ; ex ) 제한 시간 내에 던전 입장 수락 버튼을 눌렀는가? YES -> 입장,  NO -> 던전 취소
+    ; 반복문 (while for )
+    ; 특정 조건을 만족할 때 까지 반복해서 실행
     
-    ;조건 -> 흐름 
-    ; CMP dst, src (dst가 기준)
-    ; 비교를 한 결과물은 Flag Register 저장 
+    ; ex ) Hello World 10번을 출력 해야 한다면?  
+    ; comment : 안보고 Jump 와 cmp를 활용해서 반복분 만들어보기.
     
-    ; JMP(JUMP) [label] 시리즈 
-    ; JMP  : 무조건 Jump
-    ; JE : JumpEquals 같으면 jump
-    ; JNE : JUmpNotEquals 다르면 jump
-    ; JG : JumpGreater jump 
-    ; JGE : JumpGreaterEquals 크거나 같으면 jump
-    ; JL .. JLE ... 
+    ; mov al,10
+    ; 카운터와 관련된 건 ecx에서 많이 사용 
+    mov ecx, 10
+    ;jmp L1 빼도됨
     
-    ; 두 숫자가 같으면 1, 아니면 0을 출력하는 프로그램 
-    mov rax, 20
-    mov rbx, 10
+L1:
+PRINT_STRING msg
+NEWLINE
+;sub ecx , 1
+;서브를 해줘도 되는데 dec이 더 빨리동작
+dec ecx
+cmp ecx, 0
+JNE L1
+              
+  ;연습문제 ) 1에서 100까지의 합을 구하는 프로그램 1+2+3+4 ... +100 = ?     
+  ; al 과 bl 등으로 하면 문제가 발생함. 
+  ;al (1바이트)를 결과 연산에 사용하시는데,
+ ;signed int8은 (-127~128)의 범위라서 그 범위를 초과하면
+ ;엉뚱한 결과가 나올 수 있습니다.         
+    xor eax,eax
+    mov ebx, 0
+L2:
+    inc eax
+    add ebx, eax
+    cmp eax, 100
+    jne L2
     
-    cmp rax, rbx
-    
-    je LABEL_EQUAL
-    
-    ; je를 못했으면, 같지 않다는 의미.
-    ; mov rcx, 0
-    xor rcx, rcx
-    jmp LABEL_EQUAL_END
-    
-LABEL_EQUAL:
-    mov rcx, 1
-    
-LABEL_EQUAL_END:
+    PRINT_DEC 4, ebx
+    NEWLINE
 
-     PRINT_HEX 1, rcx
-     NEWLINE 
-     
-     ;연습 문제 : 어떤 숫자 (1~100)가 짝수면1, 홀수면 0 출력하는 프로그램 
-     mov ax, 100
-     mov bl, 2 
-     div bl
+
+;PRINT_DEC 1, rbx
+;NEWLINE
+;해답
+; mov eax, 100
+; xor ebx,ebx
+ 
+;  LABEL_SUM:
+;   ;inc ecx ; add ecx, 1과 동일
+ ;  add ebx,eax ; ebx = ebx + ecx
+  ; dec eax
+   ;cmp eax, 0
+   ;jne LABEL_SUM
+   ;PRINT_DEC 4, ebx
+   ;NEWLINE
+   
+    ; loop [라벨]
+    ; - ecx에 반복 횟수
+    ; - loop를 할때마다 ecx 1 감소. 0이면 빠져나감. 아니면, 라벨로 이동
+    mov ecx,100
+    xor ebx,ebx
+LABEL_LOOP_SUM:
+      add ebx,ecx
+      loop LABEL_LOOP_SUM
+      
+    PRINT_DEC 4, ebx
+    NEWLINE
     
-    cmp ah,0
-    
-    JNE LABEL2_EQUAL
-    
-    mov rcx,1
-    jmp LABEL2_NOT_EQUAL
-     ; 나누기 연산 
-     ; div reg
-     ; - div bl => ax / bl (al몫 ah 나머지)
-LABEL2_EQUAL:
-    XOR rcx,rcx
-LABEL2_NOT_EQUAL:
-    PRINT_HEX 1, rcx         
-                   
-                     
     xor rax, rax
     ret
 
-;section .data
-
+section .data
+    msg db 'Hello World', 0x0
+ 
  
 section .bss
     num resb 1
