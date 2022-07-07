@@ -5,68 +5,34 @@ global CMAIN
 CMAIN:
    mov rbp, rsp; for correct debugging
     
-   ; 배열과 주소
-   
-   ; 배열 : 동일한 타입의 데이터 묶음
-   ; - 배열을 구성하는 각 값을 배열 요소 (element)
-   ; - 배열의 위치를 가르키는 숫자 인덱스 (index)
-   mov rax ,a 
-   
-   PRINT_HEX 1, [a]
-   NEWLINE
+    ;함수 (프로시저 procedure 서브루틴 subroutine)
     
-    ; 다음 데이터로 그럼 어떻게 넘어가는가? 위에 껀 a 에 있는 0x01이라면 0x02를 꺼내기 위해선?
-    ; 내가 생각한 것
-    ;inc rax
-    ;PRINT_HEX 1,[rax]
-    ; 풀이
-    PRINT_HEX 1, [a+1]
-    NEWLINE
-    PRINT_HEX 1, [a+2]
-    NEWLINE
-    
-    ; 연습문제 : a 배열의 모든 데이터 출력
-    ; loop 형태로 구현. loop는 위로 한 줄만 입력이 가능..
-    xor ecx, ecx
-   
-    L1:
-    PRINT_HEX 1, [a+ecx]
-    NEWLINE
-    inc ecx
-    cmp ecx,5
-    jne L1
-    
-    
-    
-    ; 연습문제 :b 배열의 모든 데이터 출력
-    xor ecx,ecx
-
-    L2:
-    PRINT_HEX 2, [b+ecx*2]
-    NEWLINE
-    inc ecx
-    cmp ecx,5
-    jne L2
-    
-;     PRINT_HEX 2, [b]
- ;    PRINT_HEX 2, [b+2]
-  ;   PRINT_HEX 2, [b+4]
-   ;  PRINT_HEX 2, [b+6]
-    ; PRINT_HEX 2, [b+8]
-     
-     ; 주소
-     ;[시작주소 + 인덱스 + 크기]
+  ;call PRINT_MSG
+   mov eax,10
+   mov ebx,5
+   call MAX
+   PRINT_DEC 4, ecx
     
     xor rax, rax
     ret
-
+PRINT_MSG:
+PRINT_STRING msg
+NEWLINE
+ret
+MAX:
+   cmp eax,ebx
+   jg L1
+    mov ecx,ebx
+    jmp L2
+    L1:
+    mov ecx,eax
+    L2:
+    ret
+;ex ) 두 값 중 더 큰 값을 반환하는 max
+; 근데 2 값을 어떻게 넘겨받지? 반환 어떻게?
+; eax와 ebx 입력값을 ecx에 반환.
 section .data
-    msg db 'Hello World', 0x0
-   a db 0x01,0x02,0x03,0x04,0x05 ; 5 * 1 = 5 byte
-;0x1 ;0x0
-;인디언 - 0x0001 로 볼수 있다.
-   b times 5 dw 1 ; 5 * 2 = 10 byte
-   
+ msg db 'Hello World', 0x0
 section .bss
     num resb 1
     
