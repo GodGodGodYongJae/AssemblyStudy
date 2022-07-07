@@ -5,76 +5,43 @@ global CMAIN
 CMAIN:
     mov rbp, rsp; for correct debugging
     
-    ; 어떤 숫자로 데이터를 받아오겠다.
-    GET_DEC 1, al
-    GET_DEC 1, num
-    
-      ;PRINT_DEC 1, al
-      ;NEWLINE
-      ;PRINT_DEC 1, num  
-      
-      ;더하기 연산
-      ;add a,b ( a= a + b )
-      ; a는 register or meomry
-      ; b는 register or 메모리 or 상수
-      ; -단! a,b 모두 메모리 X
-      
-      ;빼기 연산
-      ;sub a,b ( a= a - b )
-      
-      add al, 1 ;레지스터 + 상수
-      PRINT_DEC 1, al
-      NEWLINE
-      
-    ; mov rax, num
-      
-      add al, [num] ; 레지스터 + 메모리
-      PRINT_DEC 1, al
-      NEWLINE
-     
-      mov bl, 3
-      add al,bl ; 레지스터 + 레지스터      PRINT_DEC 1, al
-      PRINT_DEC 1, al
-      NEWLINE
-     
-      add [num], byte 1 ; 메모리 + 상수
-      PRINT_DEC 1, [num]
-      NEWLINE
-      
-       add [num], al ; 메모리 + 레지스터
-      PRINT_DEC 1, [num]
-      NEWLINE
-        
-        
-    ; 곱하기 연산
-    ; mul reg
-    ; - mul bl => al * bl 
-    ; -- 연산결과를 ax에 저장
-    ; - mul bx => ax * bx
-    ; -- 연산 결과를 dx(상위16비트) ax(하위16비트)에 저장
-    
-     ; ex ) 5 * 8은 ?
-     mov ax, 0
-     mov al, 5
-     mov bl , 8
-     mul bl
-     PRINT_DEC 1,ax
-     NEWLINE 
-         
-    ; 나누기 연산
-    ; div reg
-    ; - div bl => ax / bl
-    ; -- 연산 결과는 al(몫) ah(나머지)
-    
-    ;ex) 100/3은?
-    mov ax, 100
-    mov bl, 3
-    div bl
-    PRINT_DEC 1,al
+    ; 쉬프트(shift)연산, 논리(logical) 연산
+    ; 음수가 아닌 이상 곱하기 1 옮길때마다 x2 해주는 값이 나옴 
+    mov eax, 0x12345678
+    PRINT_HEX 4, eax
     NEWLINE
-    mov al, ah
-    PRINT_DEC 1,al     
-         
+    shl eax, 8
+    PRINT_HEX 4, eax
+    NEWLINE
+    shr eax, 8
+   PRINT_HEX 4, eax
+    NEWLINE
+      ; 곱셈/ 나눗셈 빠르게 
+      ; 게임서버에서 ObjectID를 만들어줄 때   
+      
+      ; 논리연산 not and or xor
+      
+      ; 조건 A : 잘생겼다
+      ; 조건 B : 키가 크다
+      
+      ; not A : 잘생겼다의 반대 -> (0이면 1, 1이면 0)
+      ; A and B : 조건 A 와 조건B => 둘다1이면 1, 아니면 0
+      ; A xor B : 둘다 1이거나 둘다 0이면 0, 서로 다르면  1
+      mov al, 0b10010101
+      mov bl, 0b01111100
+      
+      ;0001 0100 0x14
+      and al,bl ; al = al and bl
+      PRINT_HEX 1, al
+      NEWLINE
+      
+      ;14     12 eb
+      ;0b1110 1011 = 0xeb
+      not al
+      PRINT_HEX 1, al
+      NEWLINE
+      
+      
     xor rax, rax
     ret
 
